@@ -15,13 +15,13 @@ app.use(express.json());
 const { PORT, DB_HOST } = process.env;
 
 app.get("/", (_req, res) => {
-    res.json({ message: "Welcome! to InstockApi!" });
+  res.json({ message: "Welcome! to InstockApi!" });
 });
 
 app.use("/api/warehouses", warehouseRoutes);
 app.use("/api/inventories", inventoryRoutes);
 
 app.listen(PORT, () => {
-    console.log(knex.client.config);
-    console.log(`Listening at http://${DB_HOST}:${PORT}`);
-})
+  console.log(knex.client.config);
+  console.log(`Listening at http://${DB_HOST}:${PORT}`);
+});
