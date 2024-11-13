@@ -3,7 +3,9 @@ import "dotenv/config";
 import initKnex from "knex";
 import configuration from "./knexfile.js";
 import cors from "cors";
-import apiRoutes from "./routes/api.js";
+import warehouseRoutes from "./routes/warehouse-routes.js";
+import inventoryRoutes from "./routes/inventory-routes.js";
+
 const knex = initKnex(configuration);
 
 const app = express();
@@ -12,10 +14,12 @@ app.use(express.json());
 
 const { PORT, DB_HOST } = process.env;
 
-app.use("/api", apiRoutes);
-app.get("/", (req, res) => {
-    res.json({ message: "Going for some API" });
+app.get("/", (_req, res) => {
+    res.json({ message: "Welcome! to InstockApi!" });
 });
+
+app.use("/api/warehouses", warehouseRoutes);
+app.use("/api/inventories", inventoryRoutes);
 
 app.listen(PORT, () => {
     console.log(knex.client.config);
