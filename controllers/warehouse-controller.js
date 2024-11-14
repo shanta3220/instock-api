@@ -25,4 +25,25 @@ const findOne = async (req, res) => {
   }
 };
 
-export { findOne };
+//GET all warehouses
+const getAllWarehouses = async(req,res) =>{
+  try {
+    const warehouses = await knex("warehouses");
+
+    if (warehouses.length === 0) {
+      return res.status(404).json({
+        message: "No warehouses found",
+      });
+    }
+    const warehousesData = warehouses.map(({...warehouse }) => warehouse);
+
+    res.status(200).json(warehousesData);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({
+      message: "Unable to retrieve warehouse data",
+    });
+  }
+}
+
+export { findOne, getAllWarehouses };

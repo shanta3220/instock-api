@@ -5,10 +5,7 @@ const router = express.Router();
 
 router
   .route("/")
-  .get((req, res) => {
-    // todo: use warehouseController to fetch all warehouses
-    res.json({ message: "GET all warehouses" });
-  })
+  .get(warehouseController.getAllWarehouses)
   .post((req, res) => {
     // todo: post a new warehouse using warehouse
     res.json({ message: "POST a new warehouses", data: req.body });
