@@ -6,9 +6,7 @@ const router = express.Router();
 /* TODO: fix all routes to use inventoryController*/
 
 // GET inventories
-router.get("/", (req, res) => {
-  res.json({ message: "GET all inventories" });
-});
+router.get("/", inventoryController.getAllInventory);
 
 // POST a new inventories
 router.post("/", inventoryController.createInventory);
