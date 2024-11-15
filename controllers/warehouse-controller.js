@@ -23,6 +23,70 @@ const getAllWarehouses = async (req, res) => {
   }
 };
 
+//POST to create a new warehouse
+const add = async (req, res) => {
+  const {
+    warehouse_name,
+    address,
+    city,
+    country,
+    contact_name,
+    contact_position,
+    contact_phone,
+    contact_email,
+  } = req.body;
+
+  //vatidate request body
+  if (
+    !warehouse_name.trim() ||
+    !address.trim() ||
+    !city.trim() ||
+    !country.trim() ||
+    !contact_name.trim() ||
+    !contact_position.trim() ||
+    !contact_phone.trim() ||
+    !contact_email.trim()
+  ) {
+    return res.status(400).json({
+      message:
+        "All feilds are required warehouse_id, item_name, description, category, status and quantity",
+    });
+  }
+
+  try {
+    const warehouseExists = await knex("warehouses")
+      .where({ warehouse_name: warehouse_name })
+      .first();
+
+    if (warehouseExists) {
+      return res.status(400).json({
+        message: `Warehouse with Name ${warehouse_name} already exists`,
+      });
+    }
+    const result = await knex("warehouses").insert({
+      warehouse_name,
+      address,
+      city,
+      country,
+      contact_name,
+      contact_position,
+      contact_phone,
+      contact_email,
+    });
+
+    const id = result[0];
+    const newWarehouse = await knex("warehouses").where({ id }).first();
+    console.log(newWarehouse);
+
+    res.status(201).json(newWarehouse);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({
+      message: "Failed to create a new warehouse",
+    });
+  }
+};
+
 // get a specific warehouse
 const findOne = async (req, res) => {
   const warehouseId = req.params.id;
@@ -72,4 +136,4 @@ const inventories = async (req, res) => {
   }
 };
 
-export { getAllWarehouses, findOne, inventories };
+export { getAllWarehouses, add, findOne, inventories };

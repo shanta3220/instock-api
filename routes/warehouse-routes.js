@@ -6,10 +6,7 @@ const router = express.Router();
 router
   .route("/")
   .get(warehouseController.getAllWarehouses)
-  .post((req, res) => {
-    // todo: post a new warehouse using warehouse
-    res.json({ message: "POST a new warehouses", data: req.body });
-  });
+  .post(warehouseController.add);
 
 // GET a single warehouses
 router
