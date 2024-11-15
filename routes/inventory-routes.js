@@ -11,9 +11,7 @@ router.get("/", (req, res) => {
 });
 
 // POST a new inventories
-router.post("/", (req, res) => {
-  res.json({ message: "POST a new inventories", data: req.body });
-});
+router.post("/", inventoryController.createInventory);
 
 // GET a single inventories
 router.get("/:id", (req, res) => {
