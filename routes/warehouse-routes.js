@@ -6,10 +6,7 @@ const router = express.Router();
 router
   .route("/")
   .get(warehouseController.getAllWarehouses)
-  .post((req, res) => {
-    // todo: post a new warehouse using warehouse
-    res.json({ message: "POST a new warehouses", data: req.body });
-  });
+  .post(warehouseController.add);
 
 // GET a single warehouses
 router
@@ -22,10 +19,8 @@ router
       data: req.body,
     });
   })
-  .delete((req, res) => {
-    // todo: use warehouseController to delete specific warehouse
-    res.json({ message: `DELETE warehouses ${req.params.id}` });
-  });
+  //use warehouseController to delete specific warehouse
+  .delete(warehouseController.deleteWarehouse);
 
 router.route("/:id/inventories").get(warehouseController.inventories);
 
