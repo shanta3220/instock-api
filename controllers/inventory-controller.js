@@ -6,7 +6,7 @@ const knex = initKnex(configuration);
 // GET - list of all inventory
 const getAllInventory = async (req, res) => {
   try {
-    const inventoryList = await knex("inventories")
+    const inventoryItems = await knex("inventories")
       .select(
         "inventories.id",
         "warehouses.warehouse_name",
@@ -16,22 +16,12 @@ const getAllInventory = async (req, res) => {
         "inventories.status",
         "inventories.quantity"
       )
-      .join("warehouses", "inventories.warehouse_id", "warehouses.id");
+      .join("warehouses", "inventories.warehouse_id", "=", "warehouses.id");
 
-    if (inventoryList.length === 0) {
-      return res.status(404).json({
-        message: "No inventory items found",
-      });
-    }
-
-    const inventoryData = inventoryList.map(({ ...inventory }) => inventory);
-
-    res.status(200).json(inventoryData);
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({
-      message: "Unable to retrieve inventory data",
-    });
+    res.status(200).json(inventoryItems);
+  } catch (error) {
+    console.error("Error fetching inventory items:", error);
+    res.status(500).json({ message: "Unable to retrieve inventory data" });
   }
 };
 

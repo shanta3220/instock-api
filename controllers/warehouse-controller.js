@@ -138,13 +138,13 @@ const inventories = async (req, res) => {
 // Delete a warehouse
 const deleteWarehouse = async (req, res) => {
   try {
-    const selectedWarehouse = await db("warehouses").where({
+    const selectedWarehouse = await knex("warehouses").where({
       id: req.params.id,
     });
     if (!selectedWarehouse.length) {
       return res.status(404).json({ message: "Warehouse does not exist!" });
     }
-    await db("warehouse")
+    await knex("warehouse")
       .where({
         id: selectedWarehouse[0].id,
       })
