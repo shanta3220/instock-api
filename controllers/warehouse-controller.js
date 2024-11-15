@@ -71,5 +71,24 @@ const inventories = async (req, res) => {
     });
   }
 };
+// Delete a warehouse
+const deleteWarehouse = async (req, res) => {
+  try {
+    const selectedWarehouse = await db("warehouses").where({
+      id: req.params.id,
+    });
+    if (!selectedWarehouse.length) {
+      return res.status(404).json({ message: "Warehouse does not exist!" });
+    }
+    await db("warehouse")
+      .where({
+        id: selectedWarehouse[0].id,
+      })
+      .del();
+    res.sendStatus(204);
+  } catch {
+    res.status(500).json({ error: error });
+  }
+};
 
-export { getAllWarehouses, findOne, inventories };
+export { getAllWarehouses, findOne, inventories, deleteWarehouse };
