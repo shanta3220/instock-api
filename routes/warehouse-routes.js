@@ -27,4 +27,6 @@ router
     res.json({ message: `DELETE warehouses ${req.params.id}` });
   });
 
+router.route("/:id/inventories").get(warehouseController.inventories);
+
 export default router;
