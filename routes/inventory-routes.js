@@ -9,6 +9,7 @@ const router = express.Router();
 router.get("/", (req, res) => {
   res.json({ message: "GET all inventories" });
 });
+
 // POST a new inventories
 router.post("/", (req, res) => {
   res.json({ message: "POST a new inventories", data: req.body });
@@ -20,12 +21,7 @@ router.get("/:id", (req, res) => {
 });
 
 // PUT update a inventories
-router.put("/:id", (req, res) => {
-  res.json({
-    message: `PUT update inventories ${req.params.id}`,
-    data: req.body,
-  });
-});
+router.put("/:id", inventoryController.updateInventory);
 
 // DELETE a inventories
 router.delete("/:id", (req, res) => {
