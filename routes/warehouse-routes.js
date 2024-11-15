@@ -22,10 +22,8 @@ router
       data: req.body,
     });
   })
-  .delete((req, res) => {
-    // todo: use warehouseController to delete specific warehouse
-    res.json({ message: `DELETE warehouses ${req.params.id}` });
-  });
+  //use warehouseController to delete specific warehouse
+  .delete(warehouseController.deleteWarehouse);
 
 router.route("/:id/inventories").get(warehouseController.inventories);
 
