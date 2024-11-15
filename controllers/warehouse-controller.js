@@ -47,7 +47,7 @@ const findOne = async (req, res) => {
   }
 };
 
-// get Inventories of a warehouse
+// get inventories for a given warehouse
 const inventories = async (req, res) => {
   const warehouseId = req.params.id;
   try {
