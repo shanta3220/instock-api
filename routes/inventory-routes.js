@@ -18,8 +18,6 @@ router.get("/:id", inventoryController.getSingleInventory);
 router.put("/:id", inventoryController.updateInventory);
 
 // DELETE a inventories
-router.delete("/:id", (req, res) => {
-  res.json({ message: `DELETE inventories ${req.params.id}` });
-});
+router.delete("/:id", inventoryController.deleteInventory);
 
 export default router;

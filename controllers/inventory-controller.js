@@ -140,6 +140,22 @@ const createInventory = async (req, res) => {
   }
 };
 
+const deleteInventory = async (req, res) => {
+  try {
+    const selectedInventory = await knex("inventories").where({
+      id: req.params.id,
+    });
+
+    if (!selectedInventory.length) {
+      return res.status(404).json({ message: "Inventory item does not exist" });
+    }
+    await knex("inventories").where({ id: selectedInventory[0].id }).del();
+    res.status(204);
+  } catch {
+    res.status(500).json({ error: error });
+  }
+};
+export { updateInventory, createInventory, deleteInventory };
 // GET a single inventory item
 const getSingleInventory = async (req, res) => {
   try {
