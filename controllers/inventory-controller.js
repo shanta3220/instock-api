@@ -134,3 +134,18 @@ const deleteInventory = async (req, res) => {
   }
 };
 export { updateInventory, createInventory, deleteInventory };
+// GET a single inventory item
+const getSingleInventory = async (req, res) => {
+  try {
+    const singleInventory = await knex("inventories").where({
+      id: req.params.id,
+    });
+    res.status(200).json(singleInventory);
+  } catch (e) {
+    res.status(500).json({
+      message: `Could not retrieve inventory data for the inventory with an ID of ${inventoryId}`,
+    });
+  }
+};
+
+export { updateInventory, createInventory, getSingleInventory };
