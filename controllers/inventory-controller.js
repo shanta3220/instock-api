@@ -3,6 +3,28 @@ import configuration from "../knexfile.js";
 
 const knex = initKnex(configuration);
 
+// GET - list of all inventory
+const getAllInventory = async (req, res) => {
+  try {
+    const inventoryItems = await knex("inventories")
+      .select(
+        "inventories.id",
+        "warehouses.warehouse_name",
+        "inventories.item_name",
+        "inventories.description",
+        "inventories.category",
+        "inventories.status",
+        "inventories.quantity"
+      )
+      .join("warehouses", "inventories.warehouse_id", "=", "warehouses.id");
+
+    res.status(200).json(inventoryItems);
+  } catch (error) {
+    console.error("Error fetching inventory items:", error);
+    res.status(500).json({ message: "Unable to retrieve inventory data" });
+  }
+};
+
 //PUT - update the inventory item
 
 const updateInventory = async (req, res) => {
@@ -132,4 +154,9 @@ const getSingleInventory = async (req, res) => {
   }
 };
 
-export { updateInventory, createInventory, getSingleInventory };
+export {
+  getAllInventory,
+  updateInventory,
+  createInventory,
+  getSingleInventory,
+};
