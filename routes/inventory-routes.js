@@ -12,9 +12,7 @@ router.get("/", inventoryController.getAllInventory);
 router.post("/", inventoryController.createInventory);
 
 // GET a single inventories
-router.get("/:id", (req, res) => {
-  res.json({ message: `GET inventories ${req.params.id}` });
-});
+router.get("/:id", inventoryController.getSingleInventory);
 
 // PUT update a inventories
 router.put("/:id", inventoryController.updateInventory);
