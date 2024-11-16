@@ -174,4 +174,5 @@ export {
   updateInventory,
   createInventory,
   getSingleInventory,
+  deleteInventory,
 };
