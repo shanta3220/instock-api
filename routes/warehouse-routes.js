@@ -8,18 +8,10 @@ router
   .get(warehouseController.getAllWarehouses)
   .post(warehouseController.add);
 
-// GET a single warehouses
 router
   .route("/:id")
   .get(warehouseController.findOne)
-  .patch((req, res) => {
-    // todo: use warehouseController to edit specific warehouse
-    res.json({
-      message: `PUT update warehouses ${req.params.id}`,
-      data: req.body,
-    });
-  })
-  //use warehouseController to delete specific warehouse
+  .put(warehouseController.update)
   .delete(warehouseController.deleteWarehouse);
 
 router.route("/:id/inventories").get(warehouseController.inventories);
