@@ -155,7 +155,6 @@ const deleteInventory = async (req, res) => {
     res.status(500).json({ error: error });
   }
 };
-export { updateInventory, createInventory, deleteInventory };
 // GET a single inventory item
 const getSingleInventory = async (req, res) => {
   try {
