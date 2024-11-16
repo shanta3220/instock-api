@@ -3,6 +3,28 @@ import configuration from "../knexfile.js";
 
 const knex = initKnex(configuration);
 
+// GET - list of all inventory
+const getAllInventory = async (req, res) => {
+  try {
+    const inventoryItems = await knex("inventories")
+      .select(
+        "inventories.id",
+        "warehouses.warehouse_name",
+        "inventories.item_name",
+        "inventories.description",
+        "inventories.category",
+        "inventories.status",
+        "inventories.quantity"
+      )
+      .join("warehouses", "inventories.warehouse_id", "=", "warehouses.id");
+
+    res.status(200).json(inventoryItems);
+  } catch (error) {
+    console.error("Error fetching inventory items:", error);
+    res.status(500).json({ message: "Unable to retrieve inventory data" });
+  }
+};
+
 //PUT - update the inventory item
 
 const updateInventory = async (req, res) => {
@@ -118,4 +140,39 @@ const createInventory = async (req, res) => {
   }
 };
 
-export { updateInventory, createInventory };
+const deleteInventory = async (req, res) => {
+  try {
+    const selectedInventory = await knex("inventories").where({
+      id: req.params.id,
+    });
+
+    if (!selectedInventory.length) {
+      return res.status(404).json({ message: "Inventory item does not exist" });
+    }
+    await knex("inventories").where({ id: selectedInventory[0].id }).del();
+    res.status(204);
+  } catch {
+    res.status(500).json({ error: error });
+  }
+};
+// GET a single inventory item
+const getSingleInventory = async (req, res) => {
+  try {
+    const singleInventory = await knex("inventories").where({
+      id: req.params.id,
+    });
+    res.status(200).json(singleInventory);
+  } catch (e) {
+    res.status(500).json({
+      message: `Could not retrieve inventory data for the inventory with an ID of ${inventoryId}`,
+    });
+  }
+};
+
+export {
+  getAllInventory,
+  updateInventory,
+  createInventory,
+  getSingleInventory,
+  deleteInventory,
+};
