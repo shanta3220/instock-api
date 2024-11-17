@@ -4,7 +4,7 @@ import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
 
 // GET - list of all inventory
-const getAllInventory = async (req, res) => {
+const index = async (req, res) => {
   try {
     const inventoryItems = await knex("inventories")
       .select(
@@ -27,7 +27,7 @@ const getAllInventory = async (req, res) => {
 
 //PUT - update the inventory item
 
-const updateInventory = async (req, res) => {
+const update = async (req, res) => {
   const { id } = req.params;
   const { warehouse_id, item_name, description, category, status, quantity } =
     req.body;
@@ -84,7 +84,7 @@ const updateInventory = async (req, res) => {
 };
 
 //POST to post a new inventory item
-const createInventory = async (req, res) => {
+const add = async (req, res) => {
   const { warehouse_id, item_name, description, category, status, quantity } =
     req.body;
 
@@ -140,7 +140,7 @@ const createInventory = async (req, res) => {
   }
 };
 
-const deleteInventory = async (req, res) => {
+const remove = async (req, res) => {
   try {
     const selectedInventory = await knex("inventories").where({
       id: req.params.id,
@@ -156,7 +156,7 @@ const deleteInventory = async (req, res) => {
   }
 };
 // GET a single inventory item
-const getSingleInventory = async (req, res) => {
+const findOne = async (req, res) => {
   try {
     const singleInventory = await knex("inventories").where({
       id: req.params.id,
@@ -169,10 +169,4 @@ const getSingleInventory = async (req, res) => {
   }
 };
 
-export {
-  getAllInventory,
-  updateInventory,
-  createInventory,
-  getSingleInventory,
-  deleteInventory,
-};
+export { index, update, add, findOne, remove };

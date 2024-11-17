@@ -3,7 +3,7 @@ import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
 
 //GET all warehouses
-const getAllWarehouses = async (req, res) => {
+const index = async (req, res) => {
   try {
     const warehouses = await knex("warehouses");
 
@@ -230,7 +230,7 @@ const inventories = async (req, res) => {
 };
 
 // Delete a warehouse
-const deleteWarehouse = async (req, res) => {
+const remove = async (req, res) => {
   try {
     const selectedWarehouse = await knex("warehouses").where({
       id: req.params.id,
@@ -249,4 +249,4 @@ const deleteWarehouse = async (req, res) => {
   }
 };
 
-export { getAllWarehouses, add, update, findOne, inventories, deleteWarehouse };
+export { index, add, update, findOne, inventories, remove };
