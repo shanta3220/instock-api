@@ -71,7 +71,11 @@ const update = async (req, res) => {
     }
 
     // Retrieve the updated inventory item
-    const updatedInventory = await knex("inventories").where({ id }).first(); // Retrieve the updated item
+    const { created_at, updated_at, ...updatedInventory } = await knex(
+      "inventories"
+    )
+      .where({ id })
+      .first(); // Retrieve the updated item
 
     // Return the updated inventory item
     res.status(200).json(updatedInventory);
@@ -127,7 +131,9 @@ const add = async (req, res) => {
       quantity,
     });
 
-    const newInventory = await knex("inventories")
+    const { created_at, updated_at, ...newInventory } = await knex(
+      "inventories"
+    )
       .where({ warehouse_id, item_name })
       .first();
 
@@ -159,13 +165,24 @@ const remove = async (req, res) => {
 // GET a single inventory item
 const findOne = async (req, res) => {
   try {
-    const singleInventory = await knex("inventories").where({
-      id: req.params.id,
+    const singleInventory = await knex("inventories")
+      .where({
+        id: req.params.id,
+      })
+      .first();
+
+    if (singleInventory) {
+      const { created_at, updated_at, ...inventoryData } = singleInventory;
+      return res.status(200).json(inventoryData);
+    }
+
+    return res.status(404).json({
+      message: `Inventory item with ID ${req.params.id} does not exist`,
     });
-    res.status(200).json(singleInventory);
   } catch (e) {
+    console.error(e);
     res.status(500).json({
-      message: `Could not retrieve inventory data for the inventory with an ID of ${inventoryId}`,
+      message: `Could not retrieve inventory data for the inventory with an ID of ${req.params.id}`,
     });
   }
 };
