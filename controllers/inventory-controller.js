@@ -150,8 +150,9 @@ const remove = async (req, res) => {
       return res.status(404).json({ message: "Inventory item does not exist" });
     }
     await knex("inventories").where({ id: selectedInventory[0].id }).del();
-    res.status(204);
-  } catch {
+    res.sendStatus(204);
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error });
   }
 };
