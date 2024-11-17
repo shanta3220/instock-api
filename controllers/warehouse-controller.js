@@ -3,7 +3,7 @@ import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
 
 //GET all warehouses
-const getAllWarehouses = async (req, res) => {
+const index = async (req, res) => {
   try {
     const warehouses = await knex("warehouses");
 
@@ -12,7 +12,9 @@ const getAllWarehouses = async (req, res) => {
         message: "No warehouses found",
       });
     }
-    const warehousesData = warehouses.map(({ ...warehouse }) => warehouse);
+    const warehousesData = warehouses.map(
+      ({ created_at, updated_at, ...warehouse }) => warehouse
+    );
 
     res.status(200).json(warehousesData);
   } catch (e) {
@@ -230,7 +232,7 @@ const inventories = async (req, res) => {
 };
 
 // Delete a warehouse
-const deleteWarehouse = async (req, res) => {
+const remove = async (req, res) => {
   try {
     const selectedWarehouse = await knex("warehouses").where({
       id: req.params.id,
@@ -238,15 +240,17 @@ const deleteWarehouse = async (req, res) => {
     if (!selectedWarehouse.length) {
       return res.status(404).json({ message: "Warehouse does not exist!" });
     }
-    await knex("warehouse")
+    await knex("warehouses")
       .where({
         id: selectedWarehouse[0].id,
       })
       .del();
+
     res.sendStatus(204);
-  } catch {
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error });
   }
 };
 
-export { getAllWarehouses, add, update, findOne, inventories, deleteWarehouse };
+export { index, add, update, findOne, inventories, remove };
