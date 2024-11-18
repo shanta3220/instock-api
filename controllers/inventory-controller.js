@@ -158,8 +158,6 @@ const deleteInventory = async (req, res) => {
 // GET a single inventory item
 const getSingleInventory = async (req, res) => {
   try {
-    console.log("Requested ID:", req.params.id); // Log the requested ID
-
     // Fetch the inventory item by ID and join with the warehouses table
     const singleInventory = await knex("inventories")
       .join("warehouses", "inventories.warehouse_id", "=", "warehouses.id")
@@ -185,7 +183,6 @@ const getSingleInventory = async (req, res) => {
     // Return the inventory item as JSON
     res.status(200).json(singleInventory);
   } catch (error) {
-    console.error("Error fetching single inventory item:", error);
     res.status(500).json({
       message: `Could not retrieve inventory data for the inventory with an ID of ${req.params.id}`,
     });
