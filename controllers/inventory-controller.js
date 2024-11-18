@@ -158,16 +158,41 @@ const deleteInventory = async (req, res) => {
 // GET a single inventory item
 const getSingleInventory = async (req, res) => {
   try {
-    const singleInventory = await knex("inventories").where({
-      id: req.params.id,
-    });
+    console.log("Requested ID:", req.params.id); // Log the requested ID
+
+    // Fetch the inventory item by ID and join with the warehouses table
+    const singleInventory = await knex("inventories")
+      .join("warehouses", "inventories.warehouse_id", "=", "warehouses.id")
+      .select(
+        "inventories.id",
+        "warehouses.warehouse_name as warehouse_name", // Correct column name
+        "inventories.item_name",
+        "inventories.description",
+        "inventories.category",
+        "inventories.status",
+        "inventories.quantity"
+      )
+      .where("inventories.id", req.params.id)
+      .first();
+
+    // Check if the inventory item exists
+    if (!singleInventory) {
+      return res.status(404).json({
+        message: `Inventory with ID ${req.params.id} not found`,
+      });
+    }
+
+    // Return the inventory item as JSON
     res.status(200).json(singleInventory);
-  } catch (e) {
+  } catch (error) {
+    console.error("Error fetching single inventory item:", error);
     res.status(500).json({
-      message: `Could not retrieve inventory data for the inventory with an ID of ${inventoryId}`,
+      message: `Could not retrieve inventory data for the inventory with an ID of ${req.params.id}`,
     });
   }
 };
+
+
 
 export {
   getAllInventory,
