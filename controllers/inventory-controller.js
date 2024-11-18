@@ -164,23 +164,32 @@ const remove = async (req, res) => {
 };
 // GET a single inventory item
 const findOne = async (req, res) => {
-  try {
+ try {
+    // Fetch the inventory item by ID and join with the warehouses table
     const singleInventory = await knex("inventories")
-      .where({
-        id: req.params.id,
-      })
+      .join("warehouses", "inventories.warehouse_id", "=", "warehouses.id")
+      .select(
+        "inventories.id",
+        "warehouses.warehouse_name as warehouse_name", // Correct column name
+        "inventories.item_name",
+        "inventories.description",
+        "inventories.category",
+        "inventories.status",
+        "inventories.quantity"
+      )
+      .where("inventories.id", req.params.id)
       .first();
 
-    if (singleInventory) {
-      const { created_at, updated_at, ...inventoryData } = singleInventory;
-      return res.status(200).json(inventoryData);
+    // Check if the inventory item exists
+    if (!singleInventory) {
+      return res.status(404).json({
+        message: `Inventory with ID ${req.params.id} not found`,
+      });
     }
 
-    return res.status(404).json({
-      message: `Inventory item with ID ${req.params.id} does not exist`,
-    });
-  } catch (e) {
-    console.error(e);
+    // Return the inventory item as JSON
+    res.status(200).json(singleInventory);
+  } catch (error) {
     res.status(500).json({
       message: `Could not retrieve inventory data for the inventory with an ID of ${req.params.id}`,
     });
