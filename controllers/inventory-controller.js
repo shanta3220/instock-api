@@ -4,7 +4,7 @@ import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
 
 // GET - list of all inventory
-const getAllInventory = async (req, res) => {
+const index = async (req, res) => {
   try {
     const inventoryItems = await knex("inventories")
       .select(
@@ -27,7 +27,7 @@ const getAllInventory = async (req, res) => {
 
 //PUT - update the inventory item
 
-const updateInventory = async (req, res) => {
+const update = async (req, res) => {
   const { id } = req.params;
   const { warehouse_id, item_name, description, category, status, quantity } =
     req.body;
@@ -71,7 +71,11 @@ const updateInventory = async (req, res) => {
     }
 
     // Retrieve the updated inventory item
-    const updatedInventory = await knex("inventories").where({ id }).first(); // Retrieve the updated item
+    const { created_at, updated_at, ...updatedInventory } = await knex(
+      "inventories"
+    )
+      .where({ id })
+      .first(); // Retrieve the updated item
 
     // Return the updated inventory item
     res.status(200).json(updatedInventory);
@@ -84,7 +88,7 @@ const updateInventory = async (req, res) => {
 };
 
 //POST to post a new inventory item
-const createInventory = async (req, res) => {
+const add = async (req, res) => {
   const { warehouse_id, item_name, description, category, status, quantity } =
     req.body;
 
@@ -127,7 +131,9 @@ const createInventory = async (req, res) => {
       quantity,
     });
 
-    const newInventory = await knex("inventories")
+    const { created_at, updated_at, ...newInventory } = await knex(
+      "inventories"
+    )
       .where({ warehouse_id, item_name })
       .first();
 
@@ -140,7 +146,7 @@ const createInventory = async (req, res) => {
   }
 };
 
-const deleteInventory = async (req, res) => {
+const remove = async (req, res) => {
   try {
     const selectedInventory = await knex("inventories").where({
       id: req.params.id,
@@ -150,14 +156,15 @@ const deleteInventory = async (req, res) => {
       return res.status(404).json({ message: "Inventory item does not exist" });
     }
     await knex("inventories").where({ id: selectedInventory[0].id }).del();
-    res.status(204);
-  } catch {
+    res.sendStatus(204);
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error });
   }
 };
 // GET a single inventory item
-const getSingleInventory = async (req, res) => {
-  try {
+const findOne = async (req, res) => {
+ try {
     // Fetch the inventory item by ID and join with the warehouses table
     const singleInventory = await knex("inventories")
       .join("warehouses", "inventories.warehouse_id", "=", "warehouses.id")
@@ -189,12 +196,4 @@ const getSingleInventory = async (req, res) => {
   }
 };
 
-
-
-export {
-  getAllInventory,
-  updateInventory,
-  createInventory,
-  getSingleInventory,
-  deleteInventory,
-};
+export { index, update, add, findOne, remove };

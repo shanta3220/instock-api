@@ -3,21 +3,14 @@ import * as inventoryController from "../controllers/inventory-controller.js";
 
 const router = express.Router();
 
-/* TODO: fix all routes to use inventoryController*/
+//Hit this route on "/inventories"
+router.route("/").get(inventoryController.index).post(inventoryController.add);
 
-// GET inventories
-router.get("/", inventoryController.getAllInventory);
-
-// POST a new inventories
-router.post("/", inventoryController.createInventory);
-
-// GET a single inventories
-router.get("/:id", inventoryController.getSingleInventory);
-
-// PUT update a inventories
-router.put("/:id", inventoryController.updateInventory);
-
-// DELETE a inventories
-router.delete("/:id", inventoryController.deleteInventory);
+//Hit this route on "/inventories/:id"
+router
+  .route("/:id")
+  .get(inventoryController.findOne)
+  .put(inventoryController.update)
+  .delete(inventoryController.remove);
 
 export default router;

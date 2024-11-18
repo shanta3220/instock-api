@@ -3,25 +3,17 @@ import * as warehouseController from "../controllers/warehouse-controller.js";
 
 const router = express.Router();
 
-router
-  .route("/")
-  .get(warehouseController.getAllWarehouses)
-  .post(warehouseController.add);
+//Hit this route on "/warehouses"
+router.route("/").get(warehouseController.index).post(warehouseController.add);
 
-// GET a single warehouses
+//Hit this route on "/warehouses/:id"
 router
   .route("/:id")
   .get(warehouseController.findOne)
-  .patch((req, res) => {
-    // todo: use warehouseController to edit specific warehouse
-    res.json({
-      message: `PUT update warehouses ${req.params.id}`,
-      data: req.body,
-    });
-  })
-  //use warehouseController to delete specific warehouse
-  .delete(warehouseController.deleteWarehouse);
+  .put(warehouseController.update)
+  .delete(warehouseController.remove);
 
+//Hit this route on "/warehouses/:id/inventories"
 router.route("/:id/inventories").get(warehouseController.inventories);
 
 export default router;
